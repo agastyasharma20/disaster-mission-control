@@ -1,0 +1,6 @@
+# simulate_drone.py only needs requests.
+requests==2.32.3
+
+# detect.py (real Jetson Nano / webcam inference path) additionally needs:
+opencv-python==4.10.0.84
+ultralytics==8.3.28
