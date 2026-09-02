@@ -1,6 +1,6 @@
 import "leaflet/dist/leaflet.css";
-import { CircleMarker, MapContainer, Polyline, Popup, TileLayer } from "react-leaflet";
-import type { Alert, Telemetry } from "../types";
+import { CircleMarker, MapContainer, Polygon, Polyline, Popup, TileLayer } from "react-leaflet";
+import type { Alert, Telemetry, Zone } from "../types";
 
 const SEVERITY_COLOR: Record<string, string> = {
   critical: "#dc2626",
@@ -13,16 +13,27 @@ interface Props {
   dronePositions: Record<string, Telemetry>;
   droneTrails: Record<string, [number, number][]>;
   alerts: Alert[];
+  zones: Zone[];
   center: [number, number];
 }
 
-export function MapView({ dronePositions, droneTrails, alerts, center }: Props) {
+export function MapView({ dronePositions, droneTrails, alerts, zones, center }: Props) {
   return (
     <MapContainer center={center} zoom={14} style={{ height: "100%", width: "100%" }}>
       <TileLayer
         attribution='&copy; OpenStreetMap contributors'
         url="https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png"
       />
+
+      {zones.map((zone) => (
+        <Polygon
+          key={zone.id}
+          positions={zone.boundary}
+          pathOptions={{ color: "#f59e0b", weight: 2, fillOpacity: 0.05, dashArray: "6 4" }}
+        >
+          <Popup>{zone.name}</Popup>
+        </Polygon>
+      ))}
 
       {Object.entries(droneTrails).map(([droneId, trail]) => (
         <Polyline key={droneId} positions={trail} pathOptions={{ color: "#2563eb", weight: 2 }} />

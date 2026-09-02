@@ -51,6 +51,13 @@ export interface Task {
   updated_at: string;
 }
 
+export interface Zone {
+  id: string;
+  name: string;
+  boundary: [number, number][];
+  created_at: string;
+}
+
 export interface Announcement {
   id: string;
   text: string;

@@ -3,6 +3,7 @@ from contextlib import asynccontextmanager
 from fastapi import FastAPI, WebSocket, WebSocketDisconnect
 from fastapi.middleware.cors import CORSMiddleware
 
+from app import mqtt_client
 from app.api import alerts, announcements, detections, tasks, telemetry, zones
 from app.config import settings
 from app.database import init_db
@@ -12,7 +13,9 @@ from app.ws.manager import manager
 @asynccontextmanager
 async def lifespan(app: FastAPI):
     await init_db()
+    mqtt_client.start()  # no-op unless MQTT_ENABLED=true
     yield
+    mqtt_client.stop()
 
 
 app = FastAPI(title="Disaster Mission Control API", lifespan=lifespan)

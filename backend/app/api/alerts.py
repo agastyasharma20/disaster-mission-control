@@ -1,3 +1,5 @@
+from uuid import UUID
+
 from fastapi import APIRouter, Depends, HTTPException
 from sqlalchemy import select
 from sqlalchemy.ext.asyncio import AsyncSession
@@ -26,7 +28,7 @@ async def list_alerts(
 
 
 @router.patch("/{alert_id}", response_model=AlertOut)
-async def update_alert(alert_id: str, body: AlertUpdate, db: AsyncSession = Depends(get_db)):
+async def update_alert(alert_id: UUID, body: AlertUpdate, db: AsyncSession = Depends(get_db)):
     alert = await db.get(Alert, alert_id)
     if alert is None:
         raise HTTPException(status_code=404, detail="Alert not found")

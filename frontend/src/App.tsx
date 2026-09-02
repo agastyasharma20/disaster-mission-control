@@ -6,7 +6,7 @@ import { MapView } from "./components/MapView";
 import { TaskBoard } from "./components/TaskBoard";
 import { VideoPanel } from "./components/VideoPanel";
 import { useWebSocket } from "./hooks/useWebSocket";
-import type { Alert, Announcement, Detection, Task, Telemetry, WsMessage } from "./types";
+import type { Alert, Announcement, Detection, Task, Telemetry, WsMessage, Zone } from "./types";
 
 const DEFAULT_CENTER: [number, number] = [22.7196, 75.8577]; // Indore, MP
 const TRAIL_LENGTH = 200;
@@ -17,6 +17,7 @@ export default function App() {
   const [alerts, setAlerts] = useState<Alert[]>([]);
   const [tasks, setTasks] = useState<Task[]>([]);
   const [announcements, setAnnouncements] = useState<Announcement[]>([]);
+  const [zones, setZones] = useState<Zone[]>([]);
   const [latestDetection, setLatestDetection] = useState<Detection | null>(null);
   const [connected, setConnected] = useState(false);
 
@@ -24,6 +25,7 @@ export default function App() {
     api.alerts().then((r) => setAlerts(r as Alert[]));
     api.tasks().then((r) => setTasks(r as Task[]));
     api.announcements().then((r) => setAnnouncements(r as Announcement[]));
+    api.zones().then((r) => setZones(r as Zone[]));
   }, []);
 
   const handleMessage = useCallback((msg: WsMessage) => {
@@ -83,6 +85,7 @@ export default function App() {
             dronePositions={dronePositions}
             droneTrails={droneTrails}
             alerts={alerts}
+            zones={zones}
             center={mapCenter}
           />
         </div>

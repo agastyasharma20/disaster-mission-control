@@ -2,10 +2,10 @@ import uuid
 from datetime import datetime, timezone
 
 from sqlalchemy import DateTime, Float, ForeignKey, String
-from sqlalchemy.dialects.postgresql import UUID
 from sqlalchemy.orm import Mapped, mapped_column
 
 from app.database import Base
+from app.db_types import GUID
 
 
 def _uuid() -> uuid.UUID:
@@ -19,7 +19,7 @@ def _now() -> datetime:
 class DroneTelemetry(Base):
     __tablename__ = "drone_telemetry"
 
-    id: Mapped[uuid.UUID] = mapped_column(UUID(as_uuid=True), primary_key=True, default=_uuid)
+    id: Mapped[uuid.UUID] = mapped_column(GUID(), primary_key=True, default=_uuid)
     drone_id: Mapped[str] = mapped_column(String, index=True)
     lat: Mapped[float] = mapped_column(Float)
     lon: Mapped[float] = mapped_column(Float)
@@ -32,7 +32,7 @@ class DroneTelemetry(Base):
 class DetectionEvent(Base):
     __tablename__ = "detection_events"
 
-    id: Mapped[uuid.UUID] = mapped_column(UUID(as_uuid=True), primary_key=True, default=_uuid)
+    id: Mapped[uuid.UUID] = mapped_column(GUID(), primary_key=True, default=_uuid)
     drone_id: Mapped[str] = mapped_column(String, index=True)
     object_type: Mapped[str] = mapped_column(String, index=True)  # person|fire|smoke|flood_water|vehicle|collapsed_structure
     confidence: Mapped[float] = mapped_column(Float)
@@ -45,9 +45,9 @@ class DetectionEvent(Base):
 class Alert(Base):
     __tablename__ = "alerts"
 
-    id: Mapped[uuid.UUID] = mapped_column(UUID(as_uuid=True), primary_key=True, default=_uuid)
+    id: Mapped[uuid.UUID] = mapped_column(GUID(), primary_key=True, default=_uuid)
     detection_id: Mapped[uuid.UUID | None] = mapped_column(
-        UUID(as_uuid=True), ForeignKey("detection_events.id"), nullable=True
+        GUID(), ForeignKey("detection_events.id"), nullable=True
     )
     drone_id: Mapped[str] = mapped_column(String, index=True)
     object_type: Mapped[str] = mapped_column(String)
@@ -61,7 +61,7 @@ class Alert(Base):
 class Task(Base):
     __tablename__ = "tasks"
 
-    id: Mapped[uuid.UUID] = mapped_column(UUID(as_uuid=True), primary_key=True, default=_uuid)
+    id: Mapped[uuid.UUID] = mapped_column(GUID(), primary_key=True, default=_uuid)
     type: Mapped[str] = mapped_column(String)  # drop|rescue
     target_lat: Mapped[float] = mapped_column(Float)
     target_lon: Mapped[float] = mapped_column(Float)
@@ -70,7 +70,7 @@ class Task(Base):
     status: Mapped[str] = mapped_column(String, default="pending", index=True)
     # pending|dispatched|in_progress|completed|failed
     linked_alert_id: Mapped[uuid.UUID | None] = mapped_column(
-        UUID(as_uuid=True), ForeignKey("alerts.id"), nullable=True
+        GUID(), ForeignKey("alerts.id"), nullable=True
     )
     created_at: Mapped[datetime] = mapped_column(DateTime(timezone=True), default=_now)
     updated_at: Mapped[datetime] = mapped_column(DateTime(timezone=True), default=_now, onupdate=_now)
@@ -79,7 +79,7 @@ class Task(Base):
 class Zone(Base):
     __tablename__ = "zones"
 
-    id: Mapped[uuid.UUID] = mapped_column(UUID(as_uuid=True), primary_key=True, default=_uuid)
+    id: Mapped[uuid.UUID] = mapped_column(GUID(), primary_key=True, default=_uuid)
     name: Mapped[str] = mapped_column(String)
     # Stored as a JSON-serialisable list of [lat, lon] pairs for simplicity.
     # A real PostGIS geometry column is a straightforward upgrade (see README)
@@ -91,7 +91,7 @@ class Zone(Base):
 class Announcement(Base):
     __tablename__ = "announcements"
 
-    id: Mapped[uuid.UUID] = mapped_column(UUID(as_uuid=True), primary_key=True, default=_uuid)
+    id: Mapped[uuid.UUID] = mapped_column(GUID(), primary_key=True, default=_uuid)
     text: Mapped[str] = mapped_column(String)
     zone: Mapped[str | None] = mapped_column(String, nullable=True)
     made_by: Mapped[str | None] = mapped_column(String, nullable=True)

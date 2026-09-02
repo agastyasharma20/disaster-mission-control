@@ -5,21 +5,14 @@ from sqlalchemy.ext.asyncio import AsyncSession
 from app.database import get_db
 from app.models import DroneTelemetry
 from app.schemas import TelemetryIn, TelemetryOut
-from app.ws.manager import manager
+from app.services.ingestion import ingest_telemetry
 
 router = APIRouter(prefix="/api/telemetry", tags=["telemetry"])
 
 
 @router.post("/{drone_id}", response_model=TelemetryOut)
-async def ingest_telemetry(drone_id: str, body: TelemetryIn, db: AsyncSession = Depends(get_db)):
-    row = DroneTelemetry(drone_id=drone_id, **body.model_dump(exclude_none=True))
-    db.add(row)
-    await db.commit()
-    await db.refresh(row)
-
-    out = TelemetryOut.model_validate(row)
-    await manager.broadcast("telemetry", out.model_dump())
-    return out
+async def post_telemetry(drone_id: str, body: TelemetryIn, db: AsyncSession = Depends(get_db)):
+    return await ingest_telemetry(db, drone_id, body)
 
 
 @router.get("/{drone_id}/latest", response_model=TelemetryOut | None)

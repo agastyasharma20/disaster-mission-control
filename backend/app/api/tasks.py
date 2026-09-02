@@ -1,3 +1,5 @@
+from uuid import UUID
+
 from fastapi import APIRouter, Depends, HTTPException
 from sqlalchemy import select
 from sqlalchemy.ext.asyncio import AsyncSession
@@ -31,7 +33,7 @@ async def create_task(body: TaskCreate, db: AsyncSession = Depends(get_db)):
 
 
 @router.patch("/{task_id}", response_model=TaskOut)
-async def update_task(task_id: str, body: TaskUpdate, db: AsyncSession = Depends(get_db)):
+async def update_task(task_id: UUID, body: TaskUpdate, db: AsyncSession = Depends(get_db)):
     task = await db.get(Task, task_id)
     if task is None:
         raise HTTPException(status_code=404, detail="Task not found")
