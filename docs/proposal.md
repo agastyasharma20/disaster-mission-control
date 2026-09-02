@@ -1,6 +1,6 @@
 # Disaster Mission Control System — Software Build Proposal
 **Prepared for:** Soaring Aerotech Pvt. Ltd. (Minor Project Software Component)
-**Prepared by:** Sarvesh, B.Tech CSE, PIEMR Indore
+**Prepared by:** Agastya, B.Tech CSE, PIEMR Indore
 **Purpose of this document:** A build-ready specification to hand to Claude Code so it can scaffold and implement the software system end-to-end.
 
 ---
