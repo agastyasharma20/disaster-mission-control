@@ -3,7 +3,7 @@
 [![CI](https://github.com/agastyasharma20/disaster-mission-control/actions/workflows/ci.yml/badge.svg)](https://github.com/agastyasharma20/disaster-mission-control/actions/workflows/ci.yml)
 [![License: MIT](https://img.shields.io/badge/License-MIT-blue.svg)](LICENSE)
 
-Minor project software backbone for Soaring Aerotech's disaster-response control vehicle: surveillance drone telemetry + AI scene detection → alerts → logistics/rescue task board → live mission-control dashboard, modeled loosely on Air Force mission-control protocols.
+project software backbone for Soaring Aerotech's disaster-response control vehicle: surveillance drone telemetry + AI scene detection → alerts → logistics/rescue task board → live mission-control dashboard, modeled loosely on Air Force mission-control protocols.
 
 Full requirements/design are in [`docs/proposal.md`](docs/proposal.md) — that's the source spec this repo implements. This README covers running and extending what's built.
 
